@@ -1,4 +1,5 @@
 #include "MH_Character.h"
+#include "GameFramework/DamageType.h"
 
 
 AMH_Character::AMH_Character()
@@ -19,7 +20,6 @@ void AMH_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 }
 
 void AMH_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -34,8 +34,9 @@ float AMH_Character::TakeDamage(float DamageAmount, struct FDamageEvent const& D
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	// 분기문 써서 힐 받았을 때, 공격 받았을 때 실행할 로직 나눌 계획
-	TakeAttackedHp(Damage);
+	//TakeAttackedHp(Damage);
 	// TakeHealHp(Damage);
+	UE_LOG(LogTemp, Warning, TEXT("%f"), CurrentHp);
 	
 	return Damage;
 }
@@ -87,6 +88,16 @@ void AMH_Character::TakeHealHp(float Heal)
 			CurrentHp = _HealedHp;
 		}
 	}
+}
+
+void AMH_Character::MoveForward(float Value)
+{
+	AddMovementInput(GetActorForwardVector(), Value);
+}
+
+void AMH_Character::MoveRight(float Value)
+{
+	AddMovementInput(GetActorRightVector(), Value);
 }
 
 float AMH_Character::GetMaxHp()
