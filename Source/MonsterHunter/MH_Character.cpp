@@ -1,6 +1,3 @@
-
-
-
 #include "MH_Character.h"
 
 
@@ -30,26 +27,37 @@ void AMH_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+// 블루프린트 에서의 AnyDamage 함수와 같은 함수 (AActor 클래스로 부터 상속)
 float AMH_Character::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+	// 분기문 써서 힐 받았을 때, 공격 받았을 때 실행할 로직 나눌 계획
 	TakeAttackedDamage(Damage);
 	
 	return Damage;
 }
 
+// MH_Character 맴버변수 초기화 함수 (생성자에서 사용) 
 void AMH_Character::InitializeCharacter()
 {
 	MaxHp = 200.f;
 	CurrentHp = MaxHp;
 }
 
+// 공격받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
 void AMH_Character::TakeAttackedDamage(float Damage)
 {
 	if (CurrentHp > 0.f)
 	{
-		CurrentHp -= Damage;
+		if (Damage > CurrentHp)
+		{
+			CurrentHp = 0.f;
+		}
+		else
+		{
+			CurrentHp -= Damage;
+		}
 	}
 	else
 	{

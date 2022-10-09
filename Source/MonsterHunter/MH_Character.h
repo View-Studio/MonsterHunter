@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,10 +20,14 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// 블루프린트 에서의 AnyDamage 함수와 같은 함수 (AActor 클래스로 부터 상속)
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
+	// MH_Character 맴버변수 초기화 함수 (생성자에서 사용) 
 	void InitializeCharacter();
+
+	// 공격받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
 	void TakeAttackedDamage(float Damage);
 
 public:
