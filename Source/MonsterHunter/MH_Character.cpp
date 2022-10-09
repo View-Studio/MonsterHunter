@@ -19,6 +19,7 @@ void AMH_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 }
 
 void AMH_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -33,7 +34,8 @@ float AMH_Character::TakeDamage(float DamageAmount, struct FDamageEvent const& D
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	// 분기문 써서 힐 받았을 때, 공격 받았을 때 실행할 로직 나눌 계획
-	TakeAttackedDamage(Damage);
+	TakeAttackedHp(Damage);
+	// TakeHealHp(Damage);
 	
 	return Damage;
 }
@@ -43,16 +45,18 @@ void AMH_Character::InitializeCharacter()
 {
 	MaxHp = 200.f;
 	CurrentHp = MaxHp;
+	bIsDead = false;
 }
 
 // 공격받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
-void AMH_Character::TakeAttackedDamage(float Damage)
+void AMH_Character::TakeAttackedHp(float Damage)
 {
-	if (CurrentHp > 0.f)
+	if (!bIsDead)
 	{
 		if (Damage > CurrentHp)
 		{
 			CurrentHp = 0.f;
+			bIsDead = true;
 		}
 		else
 		{
@@ -62,6 +66,26 @@ void AMH_Character::TakeAttackedDamage(float Damage)
 	else
 	{
 		CurrentHp = 0.f;
+		bIsDead = true;
+	}
+}
+
+// 힐 받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
+void AMH_Character::TakeHealHp(float Heal)
+{
+	if (!bIsDead && MaxHp > CurrentHp)
+	{
+		float _HealedHp = CurrentHp;
+		_HealedHp += Heal;
+
+		if (_HealedHp > MaxHp)
+		{
+			CurrentHp = MaxHp;
+		}
+		else
+		{
+			CurrentHp = _HealedHp;
+		}
 	}
 }
 
@@ -73,5 +97,10 @@ float AMH_Character::GetMaxHp()
 float AMH_Character::GetCurrentHp()
 {
 	return CurrentHp;
+}
+
+bool AMH_Character::GetIsDead()
+{
+	return bIsDead;
 }
 
