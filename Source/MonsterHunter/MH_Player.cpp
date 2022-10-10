@@ -6,6 +6,7 @@
 AMH_Player::AMH_Player()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 void AMH_Player::BeginPlay()
