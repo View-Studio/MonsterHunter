@@ -489,5 +489,5 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/unrealengine,visualstudio
 
-# Content/TestBlueprints/*
-# Content/TestMaps/*
+Content/TestBlueprints/*
+Content/TestMaps/*
