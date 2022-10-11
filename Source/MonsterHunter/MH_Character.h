@@ -29,7 +29,9 @@ protected:
 
 	// 공격받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
 	void	TakeAttackedHp(float Damage);
-	void	TakeHealHp(float Heal);
+	void	TakeHealedHp(float Heal);
+	void	GiveAttack(AActor* DamagedActor);
+	void	GiveHeal(AActor* HealedActor);
 
 	virtual void MoveForward(float Value);
 	virtual void MoveRight(float Value);
@@ -42,6 +44,10 @@ public:
 protected:
 	float	MaxHp;
 	float	CurrentHp;
+
+	float	AttackPower;
+	float	HealPower;
+
 	bool	bIsDead;
 
 };

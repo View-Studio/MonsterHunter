@@ -1,5 +1,8 @@
 #include "MH_Character.h"
 #include "GameFramework/DamageType.h"
+#include "Kismet/GameplayStatics.h"
+#include "DamageTypeAttack.h"
+#include "DamageTypeHeal.h"
 
 
 AMH_Character::AMH_Character()
@@ -35,18 +38,10 @@ float AMH_Character::TakeDamage(float DamageAmount, struct FDamageEvent const& D
 
 	// 분기문 써서 힐 받았을 때, 공격 받았을 때 실행할 로직 나눌 계획
 	//TakeAttackedHp(Damage);
-	// TakeHealHp(Damage);
+	// TakeHealedHp(Damage);
 	UE_LOG(LogTemp, Warning, TEXT("%f"), CurrentHp);
 	
 	return Damage;
-}
-
-// MH_Character 맴버변수 초기화 함수 (생성자에서 사용) 
-void AMH_Character::InitializeCharacter()
-{
-	MaxHp = 200.f;
-	CurrentHp = MaxHp;
-	bIsDead = false;
 }
 
 // 공격받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
@@ -72,7 +67,7 @@ void AMH_Character::TakeAttackedHp(float Damage)
 }
 
 // 힐 받았을 시 체력 업데이트 해주는 함수 (TakeDamage 함수에서 사용)
-void AMH_Character::TakeHealHp(float Heal)
+void AMH_Character::TakeHealedHp(float Heal)
 {
 	if (!bIsDead && MaxHp > CurrentHp)
 	{
@@ -88,6 +83,18 @@ void AMH_Character::TakeHealHp(float Heal)
 			CurrentHp = _HealedHp;
 		}
 	}
+}
+
+// 공격 시 콜리전에 오버랩된 엑터를 가져와서 그 엑터에 Damage를 주는 함수
+void AMH_Character::GiveAttack(AActor* DamagedActor)
+{
+	UGameplayStatics::ApplyDamage(DamagedActor, AttackPower, GetController(), nullptr, UDamageTypeAttack::StaticClass());
+}
+
+// 힐 시 콜리전에 오버랩된 엑터를 가져와서 그 엑터에 Heal을 주는 함수
+void AMH_Character::GiveHeal(AActor* HealedActor)
+{
+	UGameplayStatics::ApplyDamage(HealedActor, HealPower, GetController(), nullptr, UDamageTypeHeal::StaticClass());
 }
 
 void AMH_Character::MoveForward(float Value)
@@ -113,5 +120,15 @@ float AMH_Character::GetCurrentHp()
 bool AMH_Character::GetIsDead()
 {
 	return bIsDead;
+}
+
+// MH_Character 맴버변수 초기화 함수 (생성자에서 사용) 
+void AMH_Character::InitializeCharacter()
+{
+	MaxHp = 200.f;
+	CurrentHp = MaxHp;
+	AttackPower = 10.f;
+	HealPower = 10.f;
+	bIsDead = false;
 }
 
